@@ -57,6 +57,10 @@ app.post('/join', (req, res) => {
   res.send('Candidate added')
 })
 
+app.get('/network', (req, res) => {
+  res.send(trusted)
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
