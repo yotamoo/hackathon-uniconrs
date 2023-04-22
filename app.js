@@ -7,6 +7,8 @@ const ambassadors = ['yotam@gmail.com']
 var trusted = { 'lena@gmail.com': 1 }
 var candidates = {}
 
+const minimumToBeTrusted = 2
+
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
@@ -31,7 +33,7 @@ app.post('/verify', (req, res) => {
     res.send(`increased person's points to ${trusted[candidate]}`)
   } else {
     const uuid = '1123-3453-2342-4564-2341'
-    candidates[candidate] = { uuid, points: 5 }
+    candidates[candidate] = { uuid, points: minimumToBeTrusted }
     // send email
     res.status(200)
     res.send(`Waiting for candidate\'s approval ${uuid}`)
@@ -58,7 +60,16 @@ app.post('/join', (req, res) => {
 })
 
 app.get('/network', (req, res) => {
-  res.send(trusted)
+  var filtered = {}
+  Object.keys(trusted).forEach(key => {
+    if (trusted[key] >= minimumToBeTrusted) {
+      filtered[key] = trusted[key]
+    }
+  })
+  
+console.log('filtered', filtered);
+
+  res.send(filtered)
 })
 
 app.listen(port, () => {
