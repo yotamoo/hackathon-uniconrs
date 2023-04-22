@@ -31,7 +31,7 @@ app.post('/verify', (req, res) => {
     res.send(`increased person's points to ${trusted[candidate]}`)
   } else {
     const uuid = '1123-3453-2342-4564-2341'
-    candidates[candidate] = uuid
+    candidates[candidate] = { uuid, points: 5 }
     // send email
     res.status(200)
     res.send(`Waiting for candidate\'s approval ${uuid}`)
@@ -42,7 +42,7 @@ app.post('/verify', (req, res) => {
 app.post('/join', (req, res) => {
   const sender = req.body.sender
   const uuid = req.body.uuid
-  const isSenderValid = candidates[sender] == uuid
+  const isSenderValid = candidates[sender].uuid == uuid
 
   if (!isSenderValid) {
     console.log('Sender is not a valid candidate')
@@ -51,7 +51,7 @@ app.post('/join', (req, res) => {
     return
   }
 
-  trusted[sender] = 1
+  trusted[sender] = candidates[sender].points
   delete candidates[sender]
   res.status(200)
   res.send('Candidate added')
